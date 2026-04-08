@@ -17,7 +17,7 @@ Connect builders, designers, and innovators — find your perfect hackathon team
 
 *1. Clone the repository**
 ```bash
-git clone [https://github.com/yourusername/hackathon-matchmaking.git](https://github.com/yourusername/hackathon-matchmaking.git)
+git clone https://github.com/codeboyz12/hackathon-matchmaker.git
 cd hackathon-matchmaking
 ```
 
