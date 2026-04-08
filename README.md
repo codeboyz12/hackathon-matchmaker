@@ -14,6 +14,13 @@ Connect builders, designers, and innovators — find your perfect hackathon team
 
 ## Quick Start
 
+
+*1. Clone the repository**
+```bash
+git clone [https://github.com/yourusername/hackathon-matchmaking.git](https://github.com/yourusername/hackathon-matchmaking.git)
+cd hackathon-matchmaking
+```
+
 ```bash
 cp .env.example .env
 docker-compose up --build
