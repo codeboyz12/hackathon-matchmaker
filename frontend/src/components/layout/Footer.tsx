@@ -1,0 +1,19 @@
+/**
+ * App footer — gradient from white → sky blue → deep navy (matches Figma design).
+ */
+export default function Footer() {
+  return (
+    <footer className="mt-auto bg-gradient-to-b from-white via-sky-300 to-navy-800 text-center py-10 px-4">
+      <div className="flex items-center justify-center gap-4 text-sm text-white mb-4">
+        <a href="#" className="hover:text-navy-100 transition-colors">
+          ข้อตกลงการใช้งาน
+        </a>
+        <span>|</span>
+        <a href="#" className="hover:text-navy-100 transition-colors">
+          นโยบายความเป็นส่วนตัว
+        </a>
+      </div>
+      <p className="text-sm text-white/90">2025 GrandLine. All right reserved.</p>
+    </footer>
+  );
+}

@@ -17,6 +17,21 @@
   --color-muted:     #6b8f76;
 }
 
+/*
+ * Light theme — used by app pages (profile, find-team, skill-bank, saved)
+ * and auth pages (login, signup). Overrides :root dark variables.
+ * Apply class="light-theme" on the wrapper <div> of any route group.
+ */
+.light-theme {
+  --color-bg:         #f8fafc;
+  --color-surface:    #ffffff;
+  --color-border:     #D4DAE9;
+  --color-accent:     #1B2A5B;
+  --color-accent-dim: #2D4A8C;
+  --color-text:       #1B2A5B;
+  --color-muted:      #536BA7;
+}
+
 * { box-sizing: border-box; }
 
 html, body {

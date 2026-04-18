@@ -73,11 +73,54 @@ hackathon-matchmaking/
     ├── tailwind.config.ts
     ├── tsconfig.json
     ├── postcss.config.mjs
-    └── src/app/
-        ├── globals.css
-        ├── layout.tsx
-        ├── page.tsx
-        └── types/health.ts
+    └── src/
+        ├── app/
+        │   ├── globals.css
+        │   ├── layout.tsx              # Root layout (dark theme)
+        │   ├── page.tsx                # Health-check landing
+        │   ├── (app)/                  # Authenticated pages (sidebar layout)
+        │   │   ├── layout.tsx          # Header + Sidebar + Footer (light theme)
+        │   │   ├── profile/
+        │   │   │   ├── page.tsx        # Profile view
+        │   │   │   └── edit/
+        │   │   │       └── page.tsx    # Edit Profile form
+        │   │   ├── find-team/
+        │   │   │   ├── page.tsx        # Search teams / people
+        │   │   │   └── create/
+        │   │   │       └── page.tsx    # Create Team form
+        │   │   ├── skill-bank/
+        │   │   │   └── page.tsx        # Skill Bank dashboard
+        │   │   └── saved/
+        │   │       └── page.tsx        # Bookmarked items
+        │   └── (auth)/                 # Auth pages (centered card layout)
+        │       ├── layout.tsx
+        │       ├── login/
+        │       │   └── page.tsx
+        │       └── signup/
+        │           └── page.tsx
+        ├── components/
+        │   ├── layout/
+        │   │   ├── Header.tsx          # Sticky header, hamburger (mobile)
+        │   │   ├── Sidebar.tsx         # Fixed sidebar / mobile drawer
+        │   │   └── Footer.tsx          # Gradient footer
+        │   ├── shared/
+        │   │   ├── Logo.tsx
+        │   │   ├── AvatarPlaceholder.tsx
+        │   │   └── TagBadge.tsx
+        │   ├── profile/
+        │   │   ├── ActiveTeamCard.tsx
+        │   │   ├── CompetitionSection.tsx
+        │   │   ├── MyRoleSection.tsx
+        │   │   └── SkillRankSection.tsx
+        │   └── team/
+        │       ├── TeamCard.tsx
+        │       └── PersonCard.tsx
+        └── types/
+            ├── health.ts
+            ├── auth.ts
+            ├── profile.ts
+            ├── skill.ts
+            └── team.ts
 ```
 
 ## License
