@@ -1,14 +1,17 @@
-/**
- * Logo placeholder — replace the anchor emoji with the actual GRAND LINE logo image
- * when the design asset is ready.
- */
+import Image from "next/image";
+import Link from "next/link";
+
 export default function Logo() {
   return (
-    <div className="flex items-center gap-1 select-none">
-      {/* TODO: Replace with <Image src="/logo.png" /> when logo file is provided */}
-      <span className="text-xl font-bold tracking-wide text-navy-700">
-        GR<span className="text-navy-500">⚓</span>ND LINE
-      </span>
-    </div>
+    <Link href="/" className="flex items-center select-none active:scale-95 transition-transform">
+      <Image 
+        src="/logo.svg" 
+        alt="Grand Line Logo" 
+        width={140}   // ปรับขนาดความกว้างตามความเหมาะสมของไฟล์คุณ
+        height={40}   // ปรับขนาดความสูง
+        priority      // ให้โหลดโลโก้ก่อนสิ่งอื่น
+        className="object-contain"
+      />
+    </Link>
   );
 }

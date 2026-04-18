@@ -6,15 +6,16 @@
 
 
 :root {
-  --font-sans: 'Space Grotesk', sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
-  --color-bg:        #0a0f0d;
-  --color-surface:   #111a15;
-  --color-border:    #1e3028;
-  --color-accent:    #22c55e;
-  --color-accent-dim:#15803d;
-  --color-text:      #e2f0e8;
-  --color-muted:     #6b8f76;
+  /* ตัวแปรสีหลักสำหรับ Tailwind */
+  --primary: 12 36 100;
+  --secondary: 81 107 177;
+  --background: 249 250 251;
+  --card: 254 254 254;
+  --status: 255 172 17;
+  --notice: 255 0 0;
+  
+  /* ตัวแปรสำหรับ Gradient */
+  --theme-gradient: linear-gradient(0deg, #26B1F8 11.02%, #0F5EC1 59.2%, #022DA0 109.82%);
 }
 
 /*
@@ -23,12 +24,13 @@
  * Apply class="light-theme" on the wrapper <div> of any route group.
  */
 .light-theme {
-  --color-bg:         #f8fafc;
-  --color-surface:    #ffffff;
+  /* Mapping สีจาก :root มาใช้ในระบบ Legacy ของเพื่อนคุณ */
+  --color-bg:         rgb(var(--background));
+  --color-surface:    rgb(var(--card));
   --color-border:     #D4DAE9;
-  --color-accent:     #1B2A5B;
-  --color-accent-dim: #2D4A8C;
-  --color-text:       #1B2A5B;
+  --color-accent:     rgb(var(--primary));
+  --color-accent-dim: rgb(var(--secondary));
+  --color-text:       rgb(var(--primary));
   --color-muted:      #536BA7;
 }
 
@@ -37,7 +39,7 @@
 html, body {
   background-color: var(--color-bg);
   color: var(--color-text);
-  font-family: var(--font-sans);
+  font-family: var(--font-noto-sans-thai), sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -50,7 +52,7 @@ body::before {
     linear-gradient(var(--color-border) 1px, transparent 1px),
     linear-gradient(90deg, var(--color-border) 1px, transparent 1px);
   background-size: 48px 48px;
-  opacity: 0.4;
+  opacity: 0.2; /* ปรับให้อ่อนลงหน่อยจะได้ไม่กวนสายตา */
 }
 
 ::-webkit-scrollbar        { width: 6px; }

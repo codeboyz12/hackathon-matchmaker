@@ -55,16 +55,20 @@ export default function EditProfilePage() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 max-w-2xl mx-auto">
-      {/* ── Header ── */}
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-navy-700">Edit Profile</h1>
+    <form onSubmit={handleSubmit} className="space-y-6 max-w-2xl mx-auto pb-10">
+      {/* ── Top Navigation ── */}
+      <div className="flex flex-col gap-4">
         <Link
           href="/profile"
-          className="text-sm text-navy-500 hover:text-navy-700 transition-colors"
+          className="flex items-center gap-1 text-sm text-primary font-medium hover:opacity-80 transition-opacity w-fit"
         >
-          ← Back to Profile
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          </svg>
+          ย้อนกลับ
         </Link>
+        
+        <h1 className="text-3xl font-bold text-primary">Edit Profile</h1>
       </div>
 
       {/* ── Cover Photo ── */}
