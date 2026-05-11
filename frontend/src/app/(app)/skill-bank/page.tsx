@@ -23,8 +23,9 @@ export default function SkillBankPage() {
         <h2 className="text-xl font-bold text-navy-700 mb-4">Rank Overall</h2>
 
         {/* Ship rank icon — TODO: replace with actual rank badge image from database */}
-        <div className="mx-auto w-28 h-28 rounded-full bg-gradient-to-b from-amber-100 to-amber-300 border-4 border-amber-400 flex items-center justify-center mb-3">
-          <span className="text-5xl">⛵</span>
+        <div className="mx-auto w-28 h-28 flex items-center justify-center mb-3">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/gold.svg" alt="Gold" className="w-full h-full object-contain drop-shadow-md" />
         </div>
 
         {/* Rank name — TODO: from API (Gold, Silver, Bronze, etc.) */}
@@ -85,8 +86,9 @@ export default function SkillBankPage() {
           {Array.from({ length: 6 }).map((_, i) => (
             <div key={i} className="flex items-center gap-3 p-3 rounded-xl bg-navy-50">
               {/* Skill icon placeholder — TODO: replace with actual skill badge image */}
-              <div className="w-10 h-10 rounded-full bg-amber-100 border border-amber-200 flex items-center justify-center shrink-0">
-                <span className="text-lg">⛵</span>
+              <div className="w-10 h-10 flex items-center justify-center shrink-0">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/bronze.svg" alt="Bronze" className="w-full h-full object-contain drop-shadow-sm" />
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-xs font-medium text-navy-700 truncate">Skill Name</p>

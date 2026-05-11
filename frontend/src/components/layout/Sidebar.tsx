@@ -2,22 +2,12 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import AvatarPlaceholder from "@/components/shared/AvatarPlaceholder";
-
-/**
- * Sidebar navigation — desktop: always visible fixed left, mobile: slide-in drawer overlay.
- * Figma shows left blue-accent border on mobile drawer with close chevron (‹) top-right.
- */
-
-const navItems = [
-  { href: "/profile",    label: "Profile",    icon: "👤" },
-  { href: "/skill-bank", label: "Skill Bank", icon: "🏆" },
-  { href: "/find-team",  label: "Find Team",  icon: "👥" },
-  { href: "/saved",      label: "Saved",      icon: "🔖" },
-];
+import { useState } from "react";
 
 export default function Sidebar({ isOpen, onClose }: { isOpen?: boolean; onClose?: () => void }) {
   const pathname = usePathname();
+  const [isSkillBankOpen, setSkillBankOpen] = useState(false);
+  const [isFindTeamOpen, setFindTeamOpen] = useState(false);
 
   return (
     <>
@@ -30,88 +20,170 @@ export default function Sidebar({ isOpen, onClose }: { isOpen?: boolean; onClose
         />
       )}
 
-      {/* ── Sidebar panel ── */}
+      {/* ── Sidebar panel (Mobile Drawer only) ── */}
       <aside
         className={`
-          fixed top-16 bottom-0 w-72 bg-white border-r border-navy-100 flex flex-col z-50 overflow-y-auto
-          border-l-4 border-l-sky-400
-          transition-transform duration-300 ease-in-out
-          lg:left-0 lg:w-64 lg:translate-x-0 lg:border-l-0 lg:z-20
-          ${isOpen ? "left-0 translate-x-0" : "-translate-x-full lg:translate-x-0"}
+          fixed top-0 bottom-0 left-0 w-[75%] max-w-sm bg-white shadow-xl flex flex-col z-50 overflow-y-auto
+          transition-transform duration-300 ease-in-out lg:hidden
+          ${isOpen ? "translate-x-0" : "-translate-x-full"}
         `}
       >
-        {/* Close button — mobile only */}
-        <button
-          className="lg:hidden absolute top-3 right-3 p-1 rounded-full hover:bg-navy-50 transition-colors"
-          onClick={onClose}
-          aria-label="Close menu"
-        >
-          <svg className="w-5 h-5 text-navy-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
-        </button>
+        {/* Header / Brand area with close button */}
+        <div className="flex items-center justify-between p-6 pb-4">
+          <div className="flex items-center gap-2">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/Logo.svg" alt="Grand Line Logo" className="h-5 object-contain" />
+          </div>
+          <button
+            className="p-2 text-[#233876] hover:bg-gray-100 rounded-full transition-colors"
+            onClick={onClose}
+            aria-label="Close menu"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+        </div>
 
-        {/* ── User profile summary ── */}
-        <div className="p-5 border-b border-navy-100">
-          <div className="flex items-center gap-3">
-            <AvatarPlaceholder size="lg" />
-            <div>
-              <p className="font-semibold text-navy-700 text-sm">User Name</p>
-              <p className="text-xs text-navy-400 flex items-center gap-1">
-                <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z" />
-                </svg>
-                Teammate —
-              </p>
+        {/* ── User Profile Header ── */}
+        <Link href="/profile" onClick={onClose} className="px-6 py-4 flex items-center gap-4 hover:bg-gray-50 transition-colors">
+          <div className="w-16 h-16 rounded-full overflow-hidden border border-gray-200 shadow-sm shrink-0">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/avatar.png" alt="Profile" className="w-full h-full object-cover" />
+          </div>
+          <div>
+            <h2 className="text-[#233876] font-black text-lg">Murchy D.Luffy</h2>
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#eef4ff] text-[#2c52ed] rounded-full text-xs font-bold mt-1">
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+              </svg>
+              Teammate 30
+            </div>
+          </div>
+        </Link>
+
+        {/* ── YOUR ACTIVE TEAM ── */}
+        <div className="px-6 py-6 border-b border-gray-100">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-[#233876] font-bold text-sm tracking-widest uppercase">Your Active Team</h3>
+            <Link href="/active-team" onClick={onClose} className="text-[#2c52ed] text-xs font-bold hover:underline">
+              See All
+            </Link>
+          </div>
+          <div className="flex items-start gap-4 overflow-x-auto pb-2 scrollbar-hide">
+            {[
+              { name: "หมวกฟาง", color: "border-green-400" },
+              { name: "หมวกดำ", color: "border-blue-400" },
+              { name: "ซันจิ", color: "border-purple-400" }
+            ].map((team, idx) => (
+              <div key={idx} className="flex flex-col items-center gap-2 shrink-0">
+                <div className={`w-14 h-14 rounded-full border-2 ${team.color} p-0.5`}>
+                  <div className="w-full h-full bg-gray-300 rounded-full overflow-hidden">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={`https://picsum.photos/seed/${idx}/100/100`} alt={team.name} className="w-full h-full object-cover grayscale" />
+                  </div>
+                </div>
+                <span className="text-[#233876] text-xs font-semibold">{team.name}</span>
+              </div>
+            ))}
+            <div className="flex flex-col items-center gap-2 shrink-0">
+              <div className="w-14 h-14 rounded-full border-2 border-white bg-[#1b3168] text-white flex items-center justify-center font-bold text-lg shadow-sm">
+                +2
+              </div>
             </div>
           </div>
         </div>
 
-        {/* ── Active Team preview ── */}
-        <div className="p-5 border-b border-navy-100">
-          <div className="flex items-center justify-between mb-3">
-            <h3 className="text-xs font-bold text-navy-700 uppercase tracking-wider">
-              Your Active Team
-            </h3>
-            <Link href="/profile" className="text-xs text-navy-500 hover:text-navy-700 transition-colors">
-              See All
-            </Link>
-          </div>
-          <p className="text-xs text-navy-300 italic">No active team yet</p>
-        </div>
-
-        {/* ── Navigation links ── */}
-        <nav className="flex-1 p-3" aria-label="Main navigation">
-          {navItems.map((item) => {
-            const isActive = pathname.startsWith(item.href);
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={onClose}
-                className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors mb-1 ${
-                  isActive
-                    ? "bg-navy-50 text-navy-700 border-l-4 border-navy-700"
-                    : "text-navy-500 hover:bg-navy-50 hover:text-navy-700"
-                }`}
-              >
-                <span className="text-lg">{item.icon}</span>
-                {item.label}
+        {/* ── Navigation Menu ── */}
+        <nav className="flex-1 flex flex-col py-2 px-4" aria-label="Main navigation">
+          
+          {/* SKILL BANK */}
+          <div className="border-b border-gray-50 py-2">
+            <div className="flex items-center justify-between px-2 py-3">
+              <Link href="/skill-bank" onClick={onClose} className="text-[#1b3168] font-black tracking-wider uppercase text-sm hover:text-[#2c52ed]">
+                SKILL BANK
               </Link>
-            );
-          })}
+              <button onClick={() => setSkillBankOpen(!isSkillBankOpen)} className="p-1 text-[#1b3168]">
+                <svg className={`w-5 h-5 transition-transform ${isSkillBankOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+            </div>
+            {isSkillBankOpen && (
+              <div className="mx-2 mb-4 mt-2 bg-[#f9fafb] border border-gray-100 rounded-2xl p-4 flex justify-between items-center">
+                <div className="flex flex-col items-center gap-2">
+                  <div className="w-12 h-12 bg-[#1b3168] rounded-full flex items-center justify-center text-white">
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" /></svg>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-[#1b3168] font-black text-sm">2</div>
+                    <div className="text-gray-500 text-[10px] font-bold">Role</div>
+                  </div>
+                </div>
+                <div className="flex flex-col items-center gap-2">
+                  <div className="w-12 h-12 flex items-center justify-center">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src="/gold.svg" alt="Gold" className="w-full h-full object-contain drop-shadow-sm" />
+                  </div>
+                  <div className="text-center">
+                    <div className="text-[#1b3168] font-black text-sm">8</div>
+                    <div className="text-gray-500 text-[10px] font-bold">Hard skill</div>
+                  </div>
+                </div>
+                <div className="flex flex-col items-center gap-2">
+                  <div className="w-12 h-12 bg-[#1b3168] rounded-full flex items-center justify-center text-white">
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" /></svg>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-[#1b3168] font-black text-sm">12</div>
+                    <div className="text-gray-500 text-[10px] font-bold">Competition</div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* FIND TEAM */}
+          <div className="border-b border-gray-50 py-2">
+            <div className="flex items-center justify-between px-2 py-3">
+              <Link href="/find-team" onClick={onClose} className="text-[#1b3168] font-black tracking-wider uppercase text-sm hover:text-[#2c52ed]">
+                FIND TEAM
+              </Link>
+              <button onClick={() => setFindTeamOpen(!isFindTeamOpen)} className="p-1 text-[#1b3168]">
+                <svg className={`w-5 h-5 transition-transform ${isFindTeamOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+            </div>
+            {isFindTeamOpen && (
+              <div className="mx-2 mb-4 mt-2 flex gap-4">
+                <Link href="/find-team?tab=team" onClick={onClose} className="flex-1 border-2 border-blue-100 rounded-2xl p-4 flex flex-col items-center justify-center gap-2 hover:border-[#2c52ed] transition-colors">
+                  <svg className="w-8 h-8 text-[#2c52ed]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+                  <span className="text-[#1b3168] font-black text-sm">TEAM</span>
+                </Link>
+                <Link href="/find-team?tab=people" onClick={onClose} className="flex-1 border-2 border-blue-100 rounded-2xl p-4 flex flex-col items-center justify-center gap-2 hover:border-[#2c52ed] transition-colors">
+                  <svg className="w-8 h-8 text-[#2c52ed]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+                  <span className="text-[#1b3168] font-black text-sm">PEOPLE</span>
+                </Link>
+              </div>
+            )}
+          </div>
+
+          {/* SAVED */}
+          <div className="border-b border-gray-50 py-2">
+            <div className="flex items-center px-2 py-3">
+              <Link href="/saved" onClick={onClose} className="text-[#1b3168] font-black tracking-wider uppercase text-sm hover:text-[#2c52ed]">
+                SAVED
+              </Link>
+            </div>
+          </div>
         </nav>
 
         {/* ── Log out ── */}
-        <div className="p-4 border-t border-navy-100">
-          <button className="flex items-center gap-3 w-full px-4 py-3 rounded-lg text-sm font-medium text-red-500 hover:bg-red-50 transition-colors">
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-              />
+        <div className="p-6 mt-auto">
+          <button className="flex items-center gap-3 w-full font-bold text-red-500 hover:text-red-600 transition-colors">
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
             </svg>
             Log out
           </button>

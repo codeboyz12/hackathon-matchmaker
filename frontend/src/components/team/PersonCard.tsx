@@ -1,65 +1,170 @@
-import type { PersonCardData } from "@/types/team";
-import AvatarPlaceholder from "@/components/shared/AvatarPlaceholder";
-import TagBadge from "@/components/shared/TagBadge";
+"use client";
 
-/**
- * Person listing card — used on the Find Team page (PEOPLE tab).
- * Shows person's name, bio, role/skill tags, and an "Add to Favorite" button.
- *
- * All data comes from the API — this component is purely presentational.
- */
+import React, { useState, useRef, useEffect } from "react";
+import Link from "next/link";
 
-export interface PersonCardProps extends Partial<PersonCardData> {
-  onToggleFavorite?: () => void;
+export interface PersonCardData {
+  id: string;
+  name: string;
+  bio: string;
+  avatarUrl: string;
+  roleTags: string[];
+  skillTags: string[];
+  isFavorited?: boolean;
 }
 
-export default function PersonCard({
-  name = "User Name",
-  bio = "",
-  roleTags = [],
-  skillTags = [],
-  isFavorited = false,
-  onToggleFavorite,
-}: PersonCardProps) {
+interface PersonCardProps {
+  data: PersonCardData;
+}
+
+function DynamicTagList({ tags, textColorClass }: { tags: string[], textColorClass: string }) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [visibleCount, setVisibleCount] = useState(tags.length);
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+    const container = containerRef.current;
+
+    const resizeObserver = new ResizeObserver(() => {
+      const children = Array.from(container.children) as HTMLElement[];
+      const containerWidth = container.clientWidth;
+      const tagElements = children.filter(c => c.dataset.tag === "true");
+
+      if (tagElements.length === 0) return;
+
+      let currentLineWidth = 0;
+      let lines = 1;
+      let count = 0;
+      const gap = 8;
+      const moreWidth = 45; // Approx width of the "+N" badge
+      
+      for (let i = 0; i < tagElements.length; i++) {
+        const childWidth = tagElements[i].offsetWidth;
+        const isLast = (i === tagElements.length - 1);
+
+        if (currentLineWidth > 0 && currentLineWidth + gap + childWidth > containerWidth) {
+          lines++;
+          currentLineWidth = childWidth;
+        } else {
+          currentLineWidth += (currentLineWidth > 0 ? gap : 0) + childWidth;
+        }
+
+        // STRICT 1-ROW LIMIT for PersonCard
+        if (lines > 1) break;
+
+        if (!isLast && lines === 1 && currentLineWidth + gap + moreWidth > containerWidth) {
+          break;
+        }
+
+        count++;
+      }
+      
+      setVisibleCount(count === 0 ? 1 : count);
+    });
+
+    resizeObserver.observe(container);
+    return () => resizeObserver.disconnect();
+  }, [tags]);
+
   return (
-    <article className="rounded-2xl border border-navy-100 bg-white p-5 hover:shadow-md transition-shadow">
-      {/* ── User info ── */}
-      <div className="flex items-start gap-4 mb-4">
-        <AvatarPlaceholder size="lg" />
-        <div className="flex-1 min-w-0">
-          <h3 className="font-bold text-navy-700 text-lg">{name}</h3>
-          {bio && <p className="text-sm text-navy-400 mt-1 line-clamp-2">{bio}</p>}
+    <div ref={containerRef} className="flex flex-wrap gap-2 w-full content-start relative min-h-[28px] overflow-hidden pointer-events-none">
+      {tags.map((tag, idx) => {
+        const isVisible = idx < visibleCount;
+        return (
+          <span 
+            key={idx} 
+            data-tag="true"
+            className={`bg-white border border-gray-100 shadow-sm ${textColorClass} text-[11px] font-semibold px-3 py-1 rounded-full items-center justify-center whitespace-nowrap
+              ${isVisible ? 'flex' : 'absolute opacity-0 pointer-events-none -z-10'}
+            `}
+          >
+            {tag}
+          </span>
+        );
+      })}
+      {tags.length > visibleCount && (
+        <span className="bg-white border border-gray-100 shadow-sm text-gray-500 text-[11px] font-semibold px-2 py-1 rounded-full flex items-center justify-center whitespace-nowrap shrink-0">
+          +{tags.length - visibleCount}
+        </span>
+      )}
+    </div>
+  );
+}
+
+export default function PersonCard({ data }: PersonCardProps) {
+  const [isFavorited, setIsFavorited] = useState(data.isFavorited || false);
+
+  return (
+    <article className="bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-md transition-shadow h-fit w-full p-6 flex flex-col gap-4">
+      {/* ── Top Section (Clickable) ── */}
+      <Link 
+        href={`/profile`} 
+        className="flex items-start gap-4 p-3 -m-3 rounded-xl hover:bg-gray-50 transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#1b3168]"
+        aria-label={`View profile for ${data.name}`}
+      >
+        {/* Avatar */}
+        <div className="w-16 h-16 rounded-full overflow-hidden shrink-0 border border-gray-100 bg-white">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={data.avatarUrl || "https://i.pravatar.cc/150"} alt={data.name} className="w-full h-full object-cover" />
         </div>
-      </div>
+        {/* Info */}
+        <div className="flex flex-col justify-center min-w-0 mt-1">
+          <h3 className="font-extrabold text-[#1b3168] text-lg leading-tight truncate">{data.name}</h3>
+          <p className="text-gray-500 font-medium text-sm mt-1 line-clamp-2 leading-relaxed">
+            {data.bio}
+          </p>
+        </div>
+      </Link>
 
-      {/* ── Tags ── */}
-      <div className="space-y-2 mb-4">
-        {roleTags.length > 0 && (
-          <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-xs font-semibold text-navy-600">⚙️ Role Tag :</span>
-            {roleTags.map((tag) => (
-              <TagBadge key={tag} label={tag} variant="role" />
-            ))}
+      {/* Divider */}
+      <hr className="border-gray-100 mt-2" />
+
+      {/* ── Tags Section ── */}
+      <div className="flex flex-col gap-2 w-full min-w-0 mt-1">
+        
+        {/* Role Tags (Row layout style matching design) */}
+        {data.roleTags && data.roleTags.length > 0 && (
+          <div className="flex flex-col lg:flex-row gap-2 lg:gap-4 lg:items-center min-w-0">
+            <div className="flex items-center gap-1.5 shrink-0 w-[100px]">
+              <svg className="w-4 h-4 text-[#1b3168]" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1v-1h14v1z"/>
+              </svg>
+              <span className="text-[#1b3168] font-bold text-xs whitespace-nowrap">Role Tag :</span>
+            </div>
+            <div className="flex-1 min-w-0">
+              <DynamicTagList tags={data.roleTags} textColorClass="text-[#1b3168]" />
+            </div>
           </div>
         )}
-        {skillTags.length > 0 && (
-          <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-xs font-semibold text-navy-600">⚙️ Skill Tag :</span>
-            {skillTags.map((tag) => (
-              <TagBadge key={tag} label={tag} variant="skill" />
-            ))}
+
+        {/* Skill Tags */}
+        {data.skillTags && data.skillTags.length > 0 && (
+          <div className="flex flex-col lg:flex-row gap-2 lg:gap-4 lg:items-center min-w-0">
+            <div className="flex items-center gap-1.5 shrink-0 w-[100px]">
+              <svg className="w-4 h-4 text-[#1b3168]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+              </svg>
+              <span className="text-[#1b3168] font-bold text-xs whitespace-nowrap">Skill Tag :</span>
+            </div>
+            <div className="flex-1 min-w-0">
+              <DynamicTagList tags={data.skillTags} textColorClass="text-[#1b3168]" />
+            </div>
           </div>
         )}
+
       </div>
 
-      {/* ── Favorite button ── */}
-      <div className="flex justify-end">
+      {/* ── Bottom Section ── */}
+      <div className="flex justify-end mt-2">
         <button
-          onClick={onToggleFavorite}
-          className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+          onClick={(e) => {
+            e.preventDefault();
+            setIsFavorited(!isFavorited);
+          }}
+          className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-bold tracking-wide transition-all shadow-sm ${
             isFavorited
-              ? "bg-navy-700 text-white"
-              : "border border-navy-200 text-navy-600 hover:bg-navy-50"
+              ? "bg-[#1b3168] text-white border-2 border-[#1b3168] hover:bg-[#12224f] hover:border-[#12224f]"
+              : "bg-white text-[#1b3168] border-2 border-[#1b3168] hover:bg-gray-50"
           }`}
         >
           <svg

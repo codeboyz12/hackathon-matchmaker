@@ -5,7 +5,7 @@ export default function Logo() {
   return (
     <Link href="/" className="flex items-center select-none active:scale-95 transition-transform">
       <Image 
-        src="/logo.svg" 
+        src="/Logo.svg" 
         alt="Grand Line Logo" 
         width={140}   // ปรับขนาดความกว้างตามความเหมาะสมของไฟล์คุณ
         height={40}   // ปรับขนาดความสูง

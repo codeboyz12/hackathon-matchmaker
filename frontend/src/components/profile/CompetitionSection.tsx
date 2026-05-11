@@ -1,13 +1,9 @@
-import type { CompetitionItem } from "@/types/profile";
+import React from "react";
 
-/**
- * COMPETITION section on the profile page.
- * Shows a timeline of hackathon competitions over an ocean-themed background.
- *
- * Background: The Figma design uses a water/ocean image. This is a placeholder —
- * the actual background image will be provided by the team later.
- * Use: style={{ backgroundImage: "url('/competition-bg.png')" }}
- */
+export interface CompetitionItem {
+  name: string;
+  date: string;
+}
 
 interface CompetitionSectionProps {
   competitions?: CompetitionItem[];
@@ -15,54 +11,45 @@ interface CompetitionSectionProps {
 
 export default function CompetitionSection({ competitions = [] }: CompetitionSectionProps) {
   return (
-    <section className="rounded-2xl border border-navy-100 overflow-hidden">
-      {/* Section header */}
-      <div className="bg-white px-6 py-4 border-b border-navy-100">
-        <h2 className="flex items-center gap-2 text-lg font-bold text-navy-700">
-          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V19H7v2h10v-2h-4v-3.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2z" />
-          </svg>
-          COMPETITION
-        </h2>
+    <section className="relative rounded-[2rem] border border-gray-200 bg-[#cceaff] p-8 sm:p-12 pt-16 w-full shadow-sm mt-8">
+      {/* Absolute centered title pill overlapping top border */}
+      <div className="absolute -top-5 left-1/2 -translate-x-1/2 bg-white border border-gray-200 px-8 py-2.5 rounded-full flex items-center gap-2 shadow-sm text-[#1b3168] font-bold text-sm tracking-widest uppercase">
+        <span className="text-[#1b3168]">⚓</span>
+        COMPETITION
       </div>
 
-      {/*
-        Background area — TODO: Replace gradient with actual ocean background image.
-        Friend will provide the asset. Set via:
-          style={{ backgroundImage: "url('/images/competition-ocean-bg.png')" }}
-      */}
-      <div
-        className="relative min-h-[400px] bg-gradient-to-b from-sky-100 to-sky-200 p-6"
-        style={{
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-      >
-        {competitions.length > 0 ? (
-          <div className="relative flex flex-col items-center gap-8">
-            {/* Dashed timeline line */}
-            <div className="absolute top-0 bottom-0 left-1/2 border-l-2 border-dashed border-navy-400" />
+      <div className="relative w-full max-w-3xl mx-auto py-8 min-h-[300px]">
+        {/* Vertical Dashed Line */}
+        <div className="absolute left-1/2 top-0 bottom-0 w-[3px] border-l-[3px] border-dashed border-[#1b3168]/60 -translate-x-1/2"></div>
 
-            {competitions.map((comp, index) => (
-              <div
-                key={`${comp.name}-${index}`}
-                className={`relative z-10 flex items-center gap-3 ${
-                  index % 2 === 0 ? "self-start" : "self-end"
-                }`}
-              >
-                <div className="bg-white/80 backdrop-blur rounded-lg px-4 py-2 shadow-sm">
-                  <p className="font-semibold text-navy-700 text-sm">{comp.name}</p>
-                  <p className="text-xs text-navy-400">{comp.date}</p>
+        {competitions.length > 0 ? (
+          <div className="flex flex-col gap-16 relative w-full">
+            {competitions.map((event, index) => {
+              const isLeft = index % 2 === 0;
+              return (
+                <div key={index} className="relative flex items-center w-full">
+                  {/* Icon on the line */}
+                  <div className="absolute left-1/2 -translate-x-1/2 w-8 h-8 flex items-center justify-center bg-[#cceaff] z-10">
+                    {index === 0 ? (
+                      <span className="text-[#1b3168] text-2xl">⛵</span>
+                    ) : (
+                      <div className="w-5 h-5 rounded-full bg-[#1b3168]"></div>
+                    )}
+                  </div>
+
+                  {/* Content */}
+                  <div className={`w-1/2 flex flex-col ${isLeft ? 'items-end pr-8 sm:pr-16 text-right' : 'items-start pl-8 sm:pl-16 ml-auto text-left'}`}>
+                    <h4 className="font-extrabold text-[#1b3168] text-lg sm:text-xl">{event.name}</h4>
+                    <p className="text-xs sm:text-sm font-bold text-[#1b3168]/70 mt-1">{event.date}</p>
+                  </div>
                 </div>
-                {/* TODO: Competition ship/icon image */}
-                <span className="text-xl">⛵</span>
-              </div>
-            ))}
+              );
+            })}
           </div>
         ) : (
-          <div className="flex items-center justify-center h-full min-h-[300px]">
-            <p className="text-sm text-navy-500 bg-white/70 backdrop-blur rounded-lg px-6 py-3">
-              No competitions yet — join a hackathon to start your journey!
+          <div className="flex flex-col items-center justify-center h-full pt-10">
+            <p className="text-sm font-medium text-[#1b3168]/60 italic bg-white/50 px-6 py-2 rounded-full">
+              No competitions charted yet.
             </p>
           </div>
         )}

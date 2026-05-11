@@ -7,30 +7,35 @@ import TagBadge from "@/components/shared/TagBadge";
  */
 
 interface MyRoleSectionProps {
-  /** List of role names — leave empty to show placeholder */
   roles?: string[];
 }
 
 export default function MyRoleSection({ roles = [] }: MyRoleSectionProps) {
   return (
-    <section className="rounded-2xl border border-navy-100 bg-white p-6">
-      <h2 className="flex items-center gap-2 text-lg font-bold text-navy-700 mb-4">
-        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
-        </svg>
+    <section className="relative rounded-[2rem] border border-gray-200 bg-white p-8 pt-12 flex-1 shadow-sm mt-8">
+      {/* Absolute centered title pill overlapping top border */}
+      <div className="absolute -top-5 left-1/2 -translate-x-1/2 bg-white border border-gray-200 px-6 py-2 rounded-full flex items-center gap-2 shadow-sm text-[#1b3168] font-bold text-sm tracking-widest uppercase">
+        <span className="text-[#1b3168]">⚓</span>
         MY ROLE
-      </h2>
+      </div>
 
       {roles.length > 0 ? (
-        <div className="flex flex-wrap gap-2">
+        <div className="grid grid-cols-2 gap-x-6 gap-y-8 justify-items-center mt-2">
           {roles.map((role) => (
-            <TagBadge key={role} label={role} variant="role" selected />
+            <div
+              key={role}
+              className="w-24 h-24 sm:w-28 sm:h-28 rounded-full border-[3px] border-[#1b3168] flex items-center justify-center p-2 text-center text-[#1b3168] font-bold text-xs sm:text-sm shadow-sm transition-transform hover:scale-105 bg-white"
+            >
+              {role}
+            </div>
           ))}
         </div>
       ) : (
-        <p className="text-sm text-navy-300 italic">
-          No roles added yet — waiting for user data
-        </p>
+        <div className="flex flex-col items-center justify-center h-full min-h-[150px]">
+          <p className="text-sm text-gray-400 italic">
+            No roles assigned yet.
+          </p>
+        </div>
       )}
     </section>
   );
