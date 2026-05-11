@@ -30,6 +30,18 @@ interface TeamCardProps {
   onRequest?: () => void;
 }
 
+const abbreviateRole = (role: string) => {
+  const map: Record<string, string> = {
+    "Developer": "Dev",
+    "Business": "Biz",
+    "UI/UX Designer": "UX",
+    "Marketing": "Mktg",
+    "AI / Data": "AI",
+    "Pitching": "Pitch"
+  };
+  return map[role] || role;
+};
+
 function DynamicTagList({ tags, textColorClass }: { tags: string[], textColorClass: string }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [visibleCount, setVisibleCount] = useState(tags.length);
@@ -145,12 +157,12 @@ export default function TeamCard({ data, onRequest }: TeamCardProps) {
             <div className="flex flex-wrap content-start gap-2 min-h-[60px]">
               {data.roles.map((role, idx) => (
                 <span key={idx} className="bg-white border border-gray-100 shadow-sm text-[#1b3168] text-[11px] font-semibold px-3 py-1 rounded-full flex items-center justify-center whitespace-nowrap">
-                  {role}
+                  {abbreviateRole(role)}
                 </span>
               ))}
             </div>
           ) : (
-            <DynamicTagList tags={data.roles} textColorClass="text-[#1b3168]" />
+            <DynamicTagList tags={data.roles.map(abbreviateRole)} textColorClass="text-[#8B5A2B]" />
           )}
         </div>
 

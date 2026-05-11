@@ -12,13 +12,15 @@ export default function Sidebar({ isOpen, onClose }: { isOpen?: boolean; onClose
   return (
     <>
       {/* ── Backdrop overlay (mobile only) ── */}
-      {isOpen && (
-        <div
-          className="fixed inset-0 z-40 bg-black/30 lg:hidden"
-          onClick={onClose}
-          aria-hidden="true"
-        />
-      )}
+      <div
+        className={`
+          fixed inset-0 z-40 bg-slate-900/60 lg:hidden
+          transition-opacity duration-300 ease-in-out
+          ${isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}
+        `}
+        onClick={onClose}
+        aria-hidden="true"
+      />
 
       {/* ── Sidebar panel (Mobile Drawer only) ── */}
       <aside
@@ -29,7 +31,7 @@ export default function Sidebar({ isOpen, onClose }: { isOpen?: boolean; onClose
         `}
       >
         {/* Header / Brand area with close button */}
-        <div className="flex items-center justify-between p-6 pb-4">
+        <div className="flex items-center justify-between p-6 pb-4 bg-theme-gradient">
           <div className="flex items-center gap-2">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/Logo.svg" alt="Grand Line Logo" className="h-5 object-contain" />
@@ -97,7 +99,34 @@ export default function Sidebar({ isOpen, onClose }: { isOpen?: boolean; onClose
         {/* ── Navigation Menu ── */}
         <nav className="flex-1 flex flex-col py-2 px-4" aria-label="Main navigation">
           
-          {/* SKILL BANK */}
+          
+
+          {/* FIND TEAM */}
+          <div className="border-b border-gray-50 py-2">
+            <div className="flex items-center justify-between px-2 py-3">
+              <Link href="/find-team" onClick={onClose} className="text-[#1b3168] font-black tracking-wider uppercase text-sm hover:text-[#2c52ed]">
+                FIND TEAM
+              </Link>
+              <button onClick={() => setFindTeamOpen(!isFindTeamOpen)} className="p-1 text-[#1b3168]">
+                <svg className={`w-5 h-5 transition-transform ${isFindTeamOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+            </div>
+            {isFindTeamOpen && (
+              <div className="mx-2 mb-4 mt-2 flex gap-4">
+                <Link href="/find-team?tab=team" onClick={onClose} className="flex-1 border-2 border-blue-100 rounded-2xl p-4 flex flex-col items-center justify-center gap-2 hover:border-[#2c52ed] transition-colors">
+                  <svg className="w-8 h-8 text-[#2c52ed]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+                  <span className="text-[#1b3168] font-black text-sm">TEAM</span>
+                </Link>
+                <Link href="/find-team?tab=people" onClick={onClose} className="flex-1 border-2 border-blue-100 rounded-2xl p-4 flex flex-col items-center justify-center gap-2 hover:border-[#2c52ed] transition-colors">
+                  <svg className="w-8 h-8 text-[#2c52ed]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+                  <span className="text-[#1b3168] font-black text-sm">PEOPLE</span>
+                </Link>
+              </div>
+            )}
+          </div>
+            {/* SKILL BANK */}
           <div className="border-b border-gray-50 py-2">
             <div className="flex items-center justify-between px-2 py-3">
               <Link href="/skill-bank" onClick={onClose} className="text-[#1b3168] font-black tracking-wider uppercase text-sm hover:text-[#2c52ed]">
@@ -142,33 +171,6 @@ export default function Sidebar({ isOpen, onClose }: { isOpen?: boolean; onClose
               </div>
             )}
           </div>
-
-          {/* FIND TEAM */}
-          <div className="border-b border-gray-50 py-2">
-            <div className="flex items-center justify-between px-2 py-3">
-              <Link href="/find-team" onClick={onClose} className="text-[#1b3168] font-black tracking-wider uppercase text-sm hover:text-[#2c52ed]">
-                FIND TEAM
-              </Link>
-              <button onClick={() => setFindTeamOpen(!isFindTeamOpen)} className="p-1 text-[#1b3168]">
-                <svg className={`w-5 h-5 transition-transform ${isFindTeamOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-            </div>
-            {isFindTeamOpen && (
-              <div className="mx-2 mb-4 mt-2 flex gap-4">
-                <Link href="/find-team?tab=team" onClick={onClose} className="flex-1 border-2 border-blue-100 rounded-2xl p-4 flex flex-col items-center justify-center gap-2 hover:border-[#2c52ed] transition-colors">
-                  <svg className="w-8 h-8 text-[#2c52ed]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
-                  <span className="text-[#1b3168] font-black text-sm">TEAM</span>
-                </Link>
-                <Link href="/find-team?tab=people" onClick={onClose} className="flex-1 border-2 border-blue-100 rounded-2xl p-4 flex flex-col items-center justify-center gap-2 hover:border-[#2c52ed] transition-colors">
-                  <svg className="w-8 h-8 text-[#2c52ed]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
-                  <span className="text-[#1b3168] font-black text-sm">PEOPLE</span>
-                </Link>
-              </div>
-            )}
-          </div>
-
           {/* SAVED */}
           <div className="border-b border-gray-50 py-2">
             <div className="flex items-center px-2 py-3">

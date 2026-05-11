@@ -17,6 +17,18 @@ interface PersonCardProps {
   data: PersonCardData;
 }
 
+const abbreviateRole = (role: string) => {
+  const map: Record<string, string> = {
+    "Developer": "Dev",
+    "Business": "Biz",
+    "UI/UX Designer": "UX",
+    "Marketing": "Mktg",
+    "AI / Data": "AI",
+    "Pitching": "Pitch"
+  };
+  return map[role] || role;
+};
+
 function DynamicTagList({ tags, textColorClass }: { tags: string[], textColorClass: string }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [visibleCount, setVisibleCount] = useState(tags.length);
@@ -132,7 +144,7 @@ export default function PersonCard({ data }: PersonCardProps) {
               <span className="text-[#1b3168] font-bold text-xs whitespace-nowrap">Role Tag :</span>
             </div>
             <div className="flex-1 min-w-0">
-              <DynamicTagList tags={data.roleTags} textColorClass="text-[#1b3168]" />
+              <DynamicTagList tags={data.roleTags.map(abbreviateRole)} textColorClass="text-[#1b3168]" />
             </div>
           </div>
         )}

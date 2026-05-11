@@ -15,16 +15,16 @@ const mockTeams: TeamCardData[] = [
     authorName: "Chanut Sunatho",
     dateRange: "10 May 2024 - 13 May 2034",
     daysLeft: 1,
-    roles: ["Dev", "Lead"],
-    skills: ["React", "Node", "SQL", "Manage"],
+    roles: ["Developer", "Pitching"],
+    skills: ["React", "API", "DB", "Story"],
     currentMembers: 3,
     maxMembers: 4,
     memberAvatars: ["https://i.pravatar.cc/150?u=2", "https://i.pravatar.cc/150?u=3"],
     description: "Lorem ipsum is simply dummy text of the printing and typesetting industry. We are looking for passionate individuals to join our project for NSC 2024.",
     detailedMembers: [
-      { name: "Chanut Sunatho", avatar: "https://i.pravatar.cc/150?u=1", role: "Leader", score: 4.9 },
+      { name: "Chanut Sunatho", avatar: "https://i.pravatar.cc/150?u=1", role: "Developer", score: 4.9 },
       { name: "Sompong Test", avatar: "https://i.pravatar.cc/150?u=2", role: "Developer", score: 4.2 },
-      { name: "Alice Doe", avatar: "https://i.pravatar.cc/150?u=3", role: "Designer", score: 5.0 }
+      { name: "Alice Doe", avatar: "https://i.pravatar.cc/150?u=3", role: "Pitching", score: 5.0 }
     ]
   },
   {
@@ -34,14 +34,14 @@ const mockTeams: TeamCardData[] = [
     authorName: "Chanut Sunatho",
     dateRange: "10 May 2024 - 13 May 2034",
     daysLeft: 2,
-    roles: ["Pitch",],
+    roles: ["Pitching"],
     skills: ["Present", "Story", "Public"],
     currentMembers: 2,
     maxMembers: 4,
     memberAvatars: ["https://i.pravatar.cc/150?u=5", "https://i.pravatar.cc/150?u=6"],
     description: "Lorem ipsum is simply dummy text of the printing and typesetting industry. Our focus is heavily on storytelling and pitching our ideas effectively.",
     detailedMembers: [
-      { name: "Chanut Sunatho", avatar: "https://i.pravatar.cc/150?u=4", role: "Speaker", score: 4.5 },
+      { name: "Chanut Sunatho", avatar: "https://i.pravatar.cc/150?u=4", role: "Pitching", score: 4.5 },
       { name: "Bob Smith", avatar: "https://i.pravatar.cc/150?u=5", role: "Pitching", score: 3.8 }
     ]
   },
@@ -52,14 +52,14 @@ const mockTeams: TeamCardData[] = [
     authorName: "Chanut Sunatho",
     dateRange: "10 May 2024 - 13 May 2034",
     daysLeft: 2,
-    roles: ["Dev", "Biz"],
-    skills: ["Pitch", "Sales", "React"],
+    roles: ["Developer", "Business"],
+    skills: ["API", "Sales", "Strategy", "React"],
     currentMembers: 2,
     maxMembers: 4,
     memberAvatars: ["https://i.pravatar.cc/150?u=8", "https://i.pravatar.cc/150?u=9"],
     description: "Lorem ipsum is simply dummy text of the printing and typesetting industry. We are building a robust backend system with a scalable architecture.",
     detailedMembers: [
-      { name: "Chanut Sunatho", avatar: "https://i.pravatar.cc/150?u=7", role: "Dev", score: 4.7 },
+      { name: "Chanut Sunatho", avatar: "https://i.pravatar.cc/150?u=7", role: "Developer", score: 4.7 },
       { name: "Jane Roe", avatar: "https://i.pravatar.cc/150?u=8", role: "Business", score: 4.1 }
     ]
   },
@@ -70,8 +70,8 @@ const mockTeams: TeamCardData[] = [
     authorName: "Chanut Sunatho",
     dateRange: "10 May 2024 - 13 May 2034",
     daysLeft: 2,
-    roles: ["MKT", "Dev"],
-    skills: ["SEO", "Content", "Brand" , "Git", "API"],
+    roles: ["Marketing", "Developer"],
+    skills: ["SEO", "Content", "Brand" , "Cloud", "API"],
     currentMembers: 1,
     maxMembers: 4,
     memberAvatars: ["https://i.pravatar.cc/150?u=11", "https://i.pravatar.cc/150?u=12"],
@@ -90,8 +90,8 @@ const mockPeople: PersonCardData[] = [
     name: "Chanut Sunatho",
     bio: "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.",
     avatarUrl: "https://i.pravatar.cc/150?u=1",
-    roleTags: ["Dev", "Lead"],
-    skillTags: ["React", "Tailwind", "Figma", "NodeJS", "UI/UX", "NextJS"],
+    roleTags: ["Developer", "UI/UX Designer"],
+    skillTags: ["React", "Cloud", "Figma", "DB", "UXR", "API"],
     isFavorited: false,
   },
   {
@@ -99,8 +99,8 @@ const mockPeople: PersonCardData[] = [
     name: "Somchai JaiDee",
     bio: "Passionate about creating beautiful user experiences. I love storytelling and brand identity.",
     avatarUrl: "https://i.pravatar.cc/150?u=4",
-    roleTags: ["Pitch", "Speaker"],
-    skillTags: ["Present", "Story", "Public Speaking", "Figma"],
+    roleTags: ["Pitching", "UI/UX Designer"],
+    skillTags: ["Present", "Story", "Public", "Figma", "Visual"],
     isFavorited: true,
   },
   {
@@ -108,8 +108,8 @@ const mockPeople: PersonCardData[] = [
     name: "Alice Wonderland",
     bio: "Backend developer looking for a fun team to build scalable microservices.",
     avatarUrl: "https://i.pravatar.cc/150?u=7",
-    roleTags: ["Dev", "Backend"],
-    skillTags: ["Golang", "Docker", "AWS", "SQL", "Redis"],
+    roleTags: ["Developer", "AI / Data"],
+    skillTags: ["Cloud", "DB", "API", "Python", "LLM"],
     isFavorited: false,
   },
   {
@@ -117,8 +117,8 @@ const mockPeople: PersonCardData[] = [
     name: "John Smith",
     bio: "Growth hacker and marketing enthusiast. I can help your product reach thousands.",
     avatarUrl: "https://i.pravatar.cc/150?u=10",
-    roleTags: ["Marketing", "Biz"],
-    skillTags: ["SEO", "Content", "Ads", "Analytics", "Strategy"],
+    roleTags: ["Marketing", "Business"],
+    skillTags: ["SEO", "Content", "Ads", "Market", "Strategy"],
     isFavorited: false,
   }
 ];
