@@ -26,15 +26,15 @@ export default function DynamicProfilePage({ params }: { params: { id: string } 
   const showActionBanner = !isCurrentUser && !!pendingRequest;
 
   return (
-    <div className="w-full min-h-screen bg-[#f4f6f8] py-8 px-4 sm:px-6">
-      <div className="flex flex-col w-full max-w-5xl mx-auto bg-white rounded-[2rem] border border-gray-200 shadow-sm overflow-hidden pb-10">
+    <div className="w-full min-h-screen bg-[#f4f6f8] py-0 px-0 sm:py-8 sm:px-6">
+      <div className="flex flex-col w-full max-w-5xl mx-auto bg-white rounded-none sm:rounded-[2rem] border-0 sm:border border-gray-200 shadow-sm overflow-hidden pb-10">
         {/* ═══════════════════════════════════════════
             Section 1: Cover Photo + Avatar
             ═══════════════════════════════════════════ */}
         <section className="relative w-full" aria-label="Cover photo and avatar">
-          <div className="w-full h-48 sm:h-64 overflow-hidden relative bg-blue-100">
+          <div className="w-full aspect-[4/1] overflow-hidden relative bg-blue-100 rounded-none sm:rounded-t-[2rem]">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/cover-bg.png" alt="Cover Photo" className="w-full h-full object-cover" />
+            <img src={user.coverImage || "/cover-bg.png"} alt="Cover Photo" className="w-full h-full object-cover object-center" />
           </div>
 
           <div className="absolute -bottom-16 left-6 sm:left-12">

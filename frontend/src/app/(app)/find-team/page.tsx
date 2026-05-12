@@ -2,134 +2,50 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import TeamCard, { TeamCardData } from "@/components/team/TeamCard";
+import TeamCard from "@/components/team/TeamCard";
 import PersonCard from "@/components/team/PersonCard";
+import { useTeamsData } from "@/hooks/useTeamsData";
 
 type ActiveTab = "team" | "people";
 
-const mockTeams: TeamCardData[] = [
-  {
-    id: "1",
-    avatarUrl: "https://i.pravatar.cc/150?u=1",
-    title: "หาเพื่อนไป NSC",
-    authorName: "Chanut Sunatho",
-    dateRange: "10 May 2024 - 13 May 2034",
-    daysLeft: 1,
-    roles: ["Developer", "Pitching"],
-    skills: ["React", "API", "DB", "Story"],
-    currentMembers: 3,
-    maxMembers: 4,
-    memberAvatars: ["https://i.pravatar.cc/150?u=2", "https://i.pravatar.cc/150?u=3"],
-    description: "Lorem ipsum is simply dummy text of the printing and typesetting industry. We are looking for passionate individuals to join our project for NSC 2024.",
-    detailedMembers: [
-      { name: "Chanut Sunatho", avatar: "https://i.pravatar.cc/150?u=1", role: "Developer", score: 4.9 },
-      { name: "Sompong Test", avatar: "https://i.pravatar.cc/150?u=2", role: "Developer", score: 4.2 },
-      { name: "Alice Doe", avatar: "https://i.pravatar.cc/150?u=3", role: "Pitching", score: 5.0 }
-    ]
-  },
-  {
-    id: "2",
-    avatarUrl: "https://i.pravatar.cc/150?u=4",
-    title: "หาเพื่อนไป NSC",
-    authorName: "Chanut Sunatho",
-    dateRange: "10 May 2024 - 13 May 2034",
-    daysLeft: 2,
-    roles: ["Pitching"],
-    skills: ["Present", "Story", "Public"],
-    currentMembers: 2,
-    maxMembers: 4,
-    memberAvatars: ["https://i.pravatar.cc/150?u=5", "https://i.pravatar.cc/150?u=6"],
-    description: "Lorem ipsum is simply dummy text of the printing and typesetting industry. Our focus is heavily on storytelling and pitching our ideas effectively.",
-    detailedMembers: [
-      { name: "Chanut Sunatho", avatar: "https://i.pravatar.cc/150?u=4", role: "Pitching", score: 4.5 },
-      { name: "Bob Smith", avatar: "https://i.pravatar.cc/150?u=5", role: "Pitching", score: 3.8 }
-    ]
-  },
-  {
-    id: "3",
-    avatarUrl: "https://i.pravatar.cc/150?u=7",
-    title: "หาเพื่อนไป NSC",
-    authorName: "Chanut Sunatho",
-    dateRange: "10 May 2024 - 13 May 2034",
-    daysLeft: 2,
-    roles: ["Developer", "Business"],
-    skills: ["API", "Sales", "Strategy", "React"],
-    currentMembers: 2,
-    maxMembers: 4,
-    memberAvatars: ["https://i.pravatar.cc/150?u=8", "https://i.pravatar.cc/150?u=9"],
-    description: "Lorem ipsum is simply dummy text of the printing and typesetting industry. We are building a robust backend system with a scalable architecture.",
-    detailedMembers: [
-      { name: "Chanut Sunatho", avatar: "https://i.pravatar.cc/150?u=7", role: "Developer", score: 4.7 },
-      { name: "Jane Roe", avatar: "https://i.pravatar.cc/150?u=8", role: "Business", score: 4.1 }
-    ]
-  },
-  {
-    id: "4",
-    avatarUrl: "https://i.pravatar.cc/150?u=10",
-    title: "หาเพื่อนไป NSC",
-    authorName: "Chanut Sunatho",
-    dateRange: "10 May 2024 - 13 May 2034",
-    daysLeft: 2,
-    roles: ["Marketing", "Developer"],
-    skills: ["SEO", "Content", "Brand" , "Cloud", "API"],
-    currentMembers: 1,
-    maxMembers: 4,
-    memberAvatars: ["https://i.pravatar.cc/150?u=11", "https://i.pravatar.cc/150?u=12"],
-    description: "Lorem ipsum is simply dummy text of the printing and typesetting industry. Looking for creative marketers to skyrocket our user base.",
-    detailedMembers: [
-      { name: "Chanut Sunatho", avatar: "https://i.pravatar.cc/150?u=10", role: "Marketing", score: 5.0 }
-    ]
-  }
-];
-
-import type { PersonCardData } from "@/components/team/PersonCard";
-
-const mockPeople: PersonCardData[] = [
-  {
-    id: "p1",
-    name: "Chanut Sunatho",
-    bio: "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.",
-    avatarUrl: "https://i.pravatar.cc/150?u=1",
-    roleTags: ["Developer", "UI/UX Designer"],
-    skillTags: ["React", "Cloud", "Figma", "DB", "UXR", "API"],
-    isFavorited: false,
-  },
-  {
-    id: "p2",
-    name: "Somchai JaiDee",
-    bio: "Passionate about creating beautiful user experiences. I love storytelling and brand identity.",
-    avatarUrl: "https://i.pravatar.cc/150?u=4",
-    roleTags: ["Pitching", "UI/UX Designer"],
-    skillTags: ["Present", "Story", "Public", "Figma", "Visual"],
-    isFavorited: true,
-  },
-  {
-    id: "p3",
-    name: "Alice Wonderland",
-    bio: "Backend developer looking for a fun team to build scalable microservices.",
-    avatarUrl: "https://i.pravatar.cc/150?u=7",
-    roleTags: ["Developer", "AI / Data"],
-    skillTags: ["Cloud", "DB", "API", "Python", "LLM"],
-    isFavorited: false,
-  },
-  {
-    id: "p4",
-    name: "John Smith",
-    bio: "Growth hacker and marketing enthusiast. I can help your product reach thousands.",
-    avatarUrl: "https://i.pravatar.cc/150?u=10",
-    roleTags: ["Marketing", "Business"],
-    skillTags: ["SEO", "Content", "Ads", "Market", "Strategy"],
-    isFavorited: false,
-  }
-];
+const ALL_ROLES = ["Developer", "Business", "UI/UX Designer", "Marketing", "AI / Data", "Pitching"];
 
 export default function FindTeamPage() {
   const [activeTab, setActiveTab] = useState<ActiveTab>("team");
   const [searchQuery, setSearchQuery] = useState("");
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [activeFilters, setActiveFilters] = useState<string[]>([]);
 
-  // TODO: Fetch from API later
-  const people = mockPeople;
+  const { teams, people, isLoading } = useTeamsData();
+
+  const toggleFilter = (role: string) => {
+    setActiveFilters((prev) =>
+      prev.includes(role) ? prev.filter((r) => r !== role) : [...prev, role]
+    );
+  };
+
+  // Filter teams by search + role filters
+  const filteredTeams = teams.filter((t) => {
+    const matchesSearch =
+      !searchQuery ||
+      t.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      t.authorName.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesFilter =
+      activeFilters.length === 0 ||
+      activeFilters.some((f) => t.roles.includes(f));
+    return matchesSearch && matchesFilter;
+  });
+
+  // Filter people by search
+  const filteredPeople = people.filter((p) => {
+    const matchesSearch =
+      !searchQuery ||
+      p.name.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesFilter =
+      activeFilters.length === 0 ||
+      activeFilters.some((f) => p.roleTags.includes(f));
+    return matchesSearch && matchesFilter;
+  });
 
   return (
     <div className="space-y-8 w-full">
@@ -143,17 +59,21 @@ export default function FindTeamPage() {
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search..."
+            placeholder="Search teams or people..."
             className="w-full pl-12 pr-4 py-3 rounded-[1rem] border border-gray-200 bg-white text-gray-700 text-sm focus:outline-none focus:border-[#1b3168] shadow-sm placeholder:text-gray-400"
           />
         </div>
 
         <button
           onClick={() => setIsFilterOpen(!isFilterOpen)}
-          className="p-3 bg-white rounded-[1rem] border border-gray-200 text-[#1b3168] hover:bg-gray-50 transition-colors shadow-sm shrink-0"
+          className={`p-3 rounded-[1rem] border text-[#1b3168] hover:bg-gray-50 transition-colors shadow-sm shrink-0 ${
+            activeFilters.length > 0
+              ? "bg-[#1b3168] text-white border-[#1b3168] hover:bg-[#12224f]"
+              : "bg-white border-gray-200"
+          }`}
           aria-label="Toggle filter panel"
         >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+          <svg className={`w-5 h-5 ${activeFilters.length > 0 ? "text-white" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
           </svg>
         </button>
@@ -166,13 +86,28 @@ export default function FindTeamPage() {
         </Link>
       </div>
 
-      {/* ── Filter Panel (collapsible) ── */}
+      {/* ── Filter Panel ── */}
       {isFilterOpen && (
         <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
-          <h3 className="text-sm font-bold text-[#1b3168] mb-3">Role Tags</h3>
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-sm font-bold text-[#1b3168]">Filter by Role</h3>
+            {activeFilters.length > 0 && (
+              <button onClick={() => setActiveFilters([])} className="text-xs text-gray-400 hover:text-gray-600 font-semibold">
+                Clear all
+              </button>
+            )}
+          </div>
           <div className="flex flex-wrap gap-2">
-            {["Leader", "Pitching", "Developer", "Business", "Marketing"].map((tag) => (
-              <button key={tag} className="px-4 py-2 rounded-full border border-gray-200 text-sm text-gray-600 hover:bg-[#1b3168] hover:text-white hover:border-[#1b3168] transition-colors font-semibold">
+            {ALL_ROLES.map((tag) => (
+              <button
+                key={tag}
+                onClick={() => toggleFilter(tag)}
+                className={`px-4 py-2 rounded-full border text-sm font-semibold transition-colors ${
+                  activeFilters.includes(tag)
+                    ? "bg-[#1b3168] text-white border-[#1b3168]"
+                    : "border-gray-200 text-gray-600 hover:bg-[#1b3168] hover:text-white hover:border-[#1b3168]"
+                }`}
+              >
                 {tag}
               </button>
             ))}
@@ -204,25 +139,56 @@ export default function FindTeamPage() {
 
       {/* ── Card Grid ── */}
       <section aria-label={activeTab === "team" ? "Team listings" : "People listings"}>
-        {activeTab === "team" ? (
-          mockTeams.length > 0 ? (
+        {isLoading ? (
+          /* Loading skeleton */
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="bg-white border border-gray-100 rounded-2xl shadow-sm p-6 h-48 animate-pulse">
+                <div className="flex gap-4">
+                  <div className="w-16 h-16 rounded-full bg-gray-200 shrink-0" />
+                  <div className="flex-1 space-y-2 pt-1">
+                    <div className="h-4 bg-gray-200 rounded w-3/4" />
+                    <div className="h-3 bg-gray-200 rounded w-1/2" />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : activeTab === "team" ? (
+          filteredTeams.length > 0 ? (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full items-start">
-              {mockTeams.map((team) => (
-                <TeamCard key={team.id} data={team} />
+              {filteredTeams.map((team) => (
+                <TeamCard key={team.id} data={{
+                  id: team.id,
+                  avatarUrl: team.avatarUrl,
+                  title: team.title,
+                  authorName: team.authorName,
+                  dateRange: team.dateRange,
+                  daysLeft: team.daysLeft,
+                  roles: team.roles,
+                  skills: team.skills,
+                  currentMembers: team.currentMemberCount,
+                  maxMembers: team.maxMembers,
+                  memberAvatars: team.memberAvatars,
+                  description: team.description,
+                  detailedMembers: team.detailedMembers,
+                }} />
               ))}
             </div>
           ) : (
             <div className="text-center py-16 bg-white rounded-2xl border border-gray-200">
-              <p className="text-gray-400 font-semibold text-sm">No teams found</p>
+              <p className="text-gray-400 font-semibold text-sm">No teams match your filters</p>
             </div>
           )
-        ) : people.length > 0 ? (
+        ) : filteredPeople.length > 0 ? (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full items-start">
-            {people.map((person) => <PersonCard key={person.id} data={person} />)}
+            {filteredPeople.map((person) => (
+              <PersonCard key={person.id} data={person} />
+            ))}
           </div>
         ) : (
           <div className="text-center py-16 bg-white rounded-2xl border border-gray-200">
-            <p className="text-gray-400 font-semibold text-sm">No people found</p>
+            <p className="text-gray-400 font-semibold text-sm">No people match your filters</p>
           </div>
         )}
       </section>

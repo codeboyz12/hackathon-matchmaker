@@ -110,7 +110,7 @@ export default function PersonCard({ data }: PersonCardProps) {
     <article className="bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-md transition-shadow h-fit w-full p-6 flex flex-col gap-4">
       {/* ── Top Section (Clickable) ── */}
       <Link 
-        href={`/profile`} 
+        href={`/profile/${data.id}`} 
         className="flex items-start gap-4 p-3 -m-3 rounded-xl hover:bg-gray-50 transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#1b3168]"
         aria-label={`View profile for ${data.name}`}
       >

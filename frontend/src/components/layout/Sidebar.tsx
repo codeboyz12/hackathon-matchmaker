@@ -3,11 +3,20 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import { CURRENT_USER_ID, mockUsers } from "@/data/mockData";
 
 export default function Sidebar({ isOpen, onClose }: { isOpen?: boolean; onClose?: () => void }) {
   const pathname = usePathname();
   const [isSkillBankOpen, setSkillBankOpen] = useState(false);
   const [isFindTeamOpen, setFindTeamOpen] = useState(false);
+
+  const currentUser = mockUsers[CURRENT_USER_ID];
+  const skillBank = currentUser?.skillBank;
+  const activeRoleCount = skillBank
+    ? Object.values(skillBank.roleMastery).filter((v) => v > 0).length
+    : 0;
+  const rankOverall = skillBank?.rankOverall ?? "Bronze";
+  const hardSkillCount = skillBank?.hardSkills.length ?? 0;
 
   return (
     <>
@@ -140,32 +149,35 @@ export default function Sidebar({ isOpen, onClose }: { isOpen?: boolean; onClose
             </div>
             {isSkillBankOpen && (
               <div className="mx-2 mb-4 mt-2 bg-[#f9fafb] border border-gray-100 rounded-2xl p-4 flex justify-between items-center">
+                {/* Stat 1: Active Roles */}
                 <div className="flex flex-col items-center gap-2">
                   <div className="w-12 h-12 bg-[#1b3168] rounded-full flex items-center justify-center text-white">
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" /></svg>
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
                   </div>
                   <div className="text-center">
-                    <div className="text-[#1b3168] font-black text-sm">2</div>
+                    <div className="text-[#1b3168] font-black text-sm">{activeRoleCount}</div>
                     <div className="text-gray-500 text-[10px] font-bold">Role</div>
                   </div>
                 </div>
+                {/* Stat 2: Rank Overall with correct medal SVG */}
                 <div className="flex flex-col items-center gap-2">
                   <div className="w-12 h-12 flex items-center justify-center">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src="/gold.svg" alt="Gold" className="w-full h-full object-contain drop-shadow-sm" />
+                    <img src={`/${rankOverall.toLowerCase()}.svg`} alt={rankOverall} className="w-full h-full object-contain drop-shadow-sm" />
                   </div>
                   <div className="text-center">
-                    <div className="text-[#1b3168] font-black text-sm">8</div>
-                    <div className="text-gray-500 text-[10px] font-bold">Hard skill</div>
+                    <div className="text-[#1b3168] font-black text-sm">{rankOverall}</div>
+                    <div className="text-gray-500 text-[10px] font-bold">Rank</div>
                   </div>
                 </div>
+                {/* Stat 3: Hard Skill count */}
                 <div className="flex flex-col items-center gap-2">
                   <div className="w-12 h-12 bg-[#1b3168] rounded-full flex items-center justify-center text-white">
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" /></svg>
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" /></svg>
                   </div>
                   <div className="text-center">
-                    <div className="text-[#1b3168] font-black text-sm">12</div>
-                    <div className="text-gray-500 text-[10px] font-bold">Competition</div>
+                    <div className="text-[#1b3168] font-black text-sm">{hardSkillCount}</div>
+                    <div className="text-gray-500 text-[10px] font-bold">Hard skill</div>
                   </div>
                 </div>
               </div>

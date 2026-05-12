@@ -162,7 +162,7 @@ export default function TeamCard({ data, onRequest }: TeamCardProps) {
               ))}
             </div>
           ) : (
-            <DynamicTagList tags={data.roles.map(abbreviateRole)} textColorClass="text-[#8B5A2B]" />
+            <DynamicTagList tags={data.roles.map(abbreviateRole)} textColorClass="text-[#1b3168]" />
           )}
         </div>
 

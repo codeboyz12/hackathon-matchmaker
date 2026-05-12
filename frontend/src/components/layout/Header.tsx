@@ -196,10 +196,10 @@ export default function Header({ onMenuToggle }: { onMenuToggle?: () => void }) 
   }, [isProfileOpen, isNotifOpen]);
 
   return (
-    <header className="sticky top-0 z-50 flex items-center h-16 px-6 sm:px-10 bg-theme-gradient shadow-sm w-full">
+    <header className="sticky top-0 z-50 flex items-center h-16 px-4 sm:px-6 bg-theme-gradient shadow-sm w-full">
       {/* ── ฝั่งซ้าย: Hamburger (Mobile) ── */}
       <button 
-        className="lg:hidden p-2 mr-4 rounded-lg hover:bg-white/10 text-white transition-colors" 
+        className="lg:hidden mr-4 rounded-lg hover:bg-white/10 text-white transition-colors" 
         onClick={onMenuToggle}
         aria-label="Open menu"
       >

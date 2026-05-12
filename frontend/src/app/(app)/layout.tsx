@@ -14,7 +14,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const pathname = usePathname();
 
-  const isProfilePage = pathname === "/profile";
+  const isProfilePage = pathname === "/profile" || pathname.startsWith("/profile/") || pathname === "/skill-bank";
 
   return (
     <div className="light-theme min-h-screen flex flex-col relative isolate" style={{ backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }}>
