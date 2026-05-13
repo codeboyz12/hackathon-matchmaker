@@ -216,6 +216,8 @@ export interface DetailedMember {
 }
 
 // ─── Team (normalized — members reference User IDs) ───────────────────────────
+export type TeamStatus = "WAITING" | "IN_PROGRESS";
+
 export interface Team {
   id: string;
   title: string;
@@ -223,6 +225,7 @@ export interface Team {
   startDate: string;
   endDate: string;
   daysLeft: number;
+  status: TeamStatus;
   requiredRoles: Role[];
   requiredSkills: string[];
   currentMemberIds: string[]; // FK → mockUsers
@@ -238,6 +241,7 @@ export const mockTeams: Team[] = [
     startDate: "2024-05-10",
     endDate: "2034-05-13",
     daysLeft: 1,
+    status: "IN_PROGRESS",
     requiredRoles: ["Developer", "Pitching"],
     requiredSkills: ["React", "API", "DB", "Story"],
     currentMemberIds: ["u1", "u3", "u2"],
@@ -251,6 +255,7 @@ export const mockTeams: Team[] = [
     startDate: "2024-05-10",
     endDate: "2034-05-13",
     daysLeft: 2,
+    status: "WAITING",
     requiredRoles: ["Pitching", "UI/UX Designer"],
     requiredSkills: ["Present", "Story", "Figma", "Visual"],
     currentMemberIds: ["u5", "u2"],
@@ -264,6 +269,7 @@ export const mockTeams: Team[] = [
     startDate: "2024-05-10",
     endDate: "2034-05-13",
     daysLeft: 3,
+    status: "IN_PROGRESS",
     requiredRoles: ["Business", "Marketing"],
     requiredSkills: ["Python", "NLP", "Strategy", "Market"],
     currentMemberIds: ["u4", "u6"],
@@ -277,10 +283,25 @@ export const mockTeams: Team[] = [
     startDate: "2024-05-10",
     endDate: "2034-05-13",
     daysLeft: 5,
+    status: "WAITING",
     requiredRoles: ["Developer", "UI/UX Designer"],
     requiredSkills: ["SEO", "React", "Figma", "Brand"],
     currentMemberIds: ["u3", "u5"],
     maxMembers: 4,
     description: "A growth-focused team combining marketing expertise with product craft. We need a frontend developer and a UX designer to ship fast.",
+  },
+  {
+    id: "t5",
+    title: "AI สตาร์ทอัพ รุ่น 2",
+    leaderId: "u6",
+    startDate: "2025-08-01",
+    endDate: "2025-08-03",
+    daysLeft: 12,
+    status: "WAITING",
+    requiredRoles: ["Business", "Pitching"],
+    requiredSkills: ["LLM", "Strategy", "Present"],
+    currentMemberIds: ["u1", "u6"],
+    maxMembers: 4,
+    description: "Next-generation AI startup competition. We have the tech — now seeking a business strategist and a compelling presenter to close the loop.",
   },
 ];

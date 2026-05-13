@@ -1,4 +1,4 @@
-import type { Role } from "@/data/mockData";
+import type { Role, TeamStatus } from "@/data/mockData";
 
 // ─── Skill Bank ────────────────────────────────────────────────────────────────
 export type SkillRank = "Bronze" | "Silver" | "Gold" | "Diamond";

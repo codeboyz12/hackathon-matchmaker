@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import { CURRENT_USER_ID, mockUsers } from "@/data/mockData";
+import { CURRENT_USER_ID, mockUsers, mockTeams } from "@/data/mockData";
 
 export default function Sidebar({ isOpen, onClose }: { isOpen?: boolean; onClose?: () => void }) {
   const pathname = usePathname();
@@ -17,6 +17,16 @@ export default function Sidebar({ isOpen, onClose }: { isOpen?: boolean; onClose
     : 0;
   const rankOverall = skillBank?.rankOverall ?? "Bronze";
   const hardSkillCount = skillBank?.hardSkills.length ?? 0;
+
+  // Derive active teams for current user (cap at 3 for sidebar UI)
+  const myActiveTeams = mockTeams
+    .filter((t) => t.currentMemberIds.includes(CURRENT_USER_ID))
+    .slice(0, 3);
+
+  // Avatar list derived values — computed here to avoid IIFE in JSX
+  const MAX_VISIBLE = 3;
+  const visibleTeams = myActiveTeams.slice(0, MAX_VISIBLE);
+  const remainingCount = myActiveTeams.length - MAX_VISIBLE;
 
   return (
     <>
@@ -74,35 +84,69 @@ export default function Sidebar({ isOpen, onClose }: { isOpen?: boolean; onClose
         </Link>
 
         {/* ── YOUR ACTIVE TEAM ── */}
-        <div className="px-6 py-6 border-b border-gray-100">
+        <div className="px-6 py-4 border-b border-gray-100">
+          {/* Header row */}
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-[#233876] font-bold text-sm tracking-widest uppercase">Your Active Team</h3>
-            <Link href="/active-team" onClick={onClose} className="text-[#2c52ed] text-xs font-bold hover:underline">
+            <Link
+              href="/active-teams"
+              onClick={onClose}
+              className="text-[#233876] font-bold text-sm tracking-widest uppercase hover:text-[#2c52ed] transition-colors"
+            >
+              Your Active Team
+            </Link>
+            <Link
+              href="/active-teams"
+              onClick={onClose}
+              className="text-[#2c52ed] text-xs font-bold hover:underline"
+            >
               See All
             </Link>
           </div>
-          <div className="flex items-start gap-4 overflow-x-auto pb-2 scrollbar-hide">
-            {[
-              { name: "หมวกฟาง", color: "border-green-400" },
-              { name: "หมวกดำ", color: "border-blue-400" },
-              { name: "ซันจิ", color: "border-purple-400" }
-            ].map((team, idx) => (
-              <div key={idx} className="flex flex-col items-center gap-2 shrink-0">
-                <div className={`w-14 h-14 rounded-full border-2 ${team.color} p-0.5`}>
-                  <div className="w-full h-full bg-gray-300 rounded-full overflow-hidden">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={`https://picsum.photos/seed/${idx}/100/100`} alt={team.name} className="w-full h-full object-cover grayscale" />
+
+          {/* Horizontal avatar list */}
+          {myActiveTeams.length > 0 ? (
+            <div className="flex flex-row gap-4 items-start">
+              {visibleTeams.map((team) => {
+                const leader = mockUsers[team.leaderId];
+                return (
+                  <Link
+                    key={team.id}
+                    href="/active-team"
+                    onClick={onClose}
+                    className="flex flex-col items-center w-14 shrink-0 group"
+                  >
+                    <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-[#1b3168] shrink-0 group-hover:border-[#2c52ed] transition-colors">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={leader?.avatarUrl ?? "https://i.pravatar.cc/150"}
+                        alt={team.title}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <span className="text-[#1b3168] text-[10px] font-semibold mt-1.5 text-center w-full truncate leading-tight">
+                      {team.title}
+                    </span>
+                  </Link>
+                );
+              })}
+
+              {/* Overflow +n bubble */}
+              {remainingCount > 0 && (
+                <Link
+                  href="/active-team"
+                  onClick={onClose}
+                  className="flex flex-col items-center w-14 shrink-0"
+                >
+                  <div className="w-14 h-14 rounded-full bg-[#1b3168] flex items-center justify-center text-white font-bold text-base shadow-sm hover:bg-[#12224f] transition-colors">
+                    +{remainingCount}
                   </div>
-                </div>
-                <span className="text-[#233876] text-xs font-semibold">{team.name}</span>
-              </div>
-            ))}
-            <div className="flex flex-col items-center gap-2 shrink-0">
-              <div className="w-14 h-14 rounded-full border-2 border-white bg-[#1b3168] text-white flex items-center justify-center font-bold text-lg shadow-sm">
-                +2
-              </div>
+                  <span className="text-gray-400 text-[10px] font-semibold mt-1.5">more</span>
+                </Link>
+              )}
             </div>
-          </div>
+          ) : (
+            <p className="text-gray-400 text-xs font-medium italic">ยังไม่มีทีมที่เข้าร่วม</p>
+          )}
         </div>
 
         {/* ── Navigation Menu ── */}

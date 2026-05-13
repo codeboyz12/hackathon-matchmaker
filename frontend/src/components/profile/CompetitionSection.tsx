@@ -1,4 +1,5 @@
 import React from "react";
+import { AnchorIcon } from "@/components/Icons";
 
 export interface CompetitionItem {
   name: string;
@@ -14,7 +15,7 @@ export default function CompetitionSection({ competitions = [] }: CompetitionSec
     <section className="relative rounded-[2rem] border border-gray-200 bg-[#cceaff] p-8 sm:p-12 pt-16 w-full shadow-sm mt-8">
       {/* Absolute centered title pill overlapping top border */}
       <div className="absolute -top-5 left-1/2 -translate-x-1/2 bg-white border border-gray-200 px-8 py-2.5 rounded-full flex items-center gap-2 shadow-sm text-[#1b3168] font-bold text-sm tracking-widest uppercase">
-        <span className="text-[#1b3168]">⚓</span>
+        <AnchorIcon className="w-4 h-4 text-[#1b3168]" />
         COMPETITION
       </div>
 

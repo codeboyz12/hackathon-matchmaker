@@ -6,7 +6,7 @@ import MyRoleSection from "@/components/profile/MyRoleSection";
 import SkillRankSection from "@/components/profile/SkillRankSection";
 import CompetitionSection from "@/components/profile/CompetitionSection";
 import ActiveTeamSection from "@/components/profile/ActiveTeamSection";
-import { CURRENT_USER_ID, mockUsers, mockPendingRequests, User } from "@/data/mockData";
+import { CURRENT_USER_ID, mockUsers, mockPendingRequests, mockTeams, User } from "@/data/mockData";
 
 export default function DynamicProfilePage({ params }: { params: { id: string } }) {
   const profileId = params.id;
@@ -24,6 +24,22 @@ export default function DynamicProfilePage({ params }: { params: { id: string } 
   );
   
   const showActionBanner = !isCurrentUser && !!pendingRequest;
+
+  // Build active teams for this profile's Section 8
+  const activeTeams = mockTeams
+    .filter((t) => t.currentMemberIds.includes(profileId))
+    .map((t) => {
+      const start = new Date(t.startDate).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+      const end = new Date(t.endDate).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+      return {
+        id: t.id,
+        teamName: t.title,
+        dateRange: `${start} - ${end}`,
+        daysLeft: t.daysLeft,
+        currentMembers: t.currentMemberIds.length,
+        maxMembers: t.maxMembers,
+      };
+    });
 
   return (
     <div className="w-full min-h-screen bg-[#f4f6f8] py-0 px-0 sm:py-8 sm:px-6">
@@ -204,19 +220,8 @@ export default function DynamicProfilePage({ params }: { params: { id: string } 
         {/* ═══════════════════════════════════════════
             Section 8: Active Team
             ═══════════════════════════════════════════ */}
-        <div className="w-full pb-10 mt-8">
-          <ActiveTeamSection 
-            teams={[
-              {
-                teamName: "Pirate Hackathon",
-                dateRange: "10 May 2024 - 23 May 2024",
-                daysLeft: 4,
-                status: "กำลังประกาศ",
-                memberCount: "3/4 คน",
-                hasNotification: true
-              }
-            ]}
-          />
+        <div className="w-full pb-4 mt-4">
+          <ActiveTeamSection teams={activeTeams} />
         </div>
       </div>
       </div>

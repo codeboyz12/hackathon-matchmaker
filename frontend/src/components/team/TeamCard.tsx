@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useRef, useState, useEffect } from "react";
+import { RoleIcon, SkillIcon } from "@/components/Icons";
 
 export interface DetailedMember {
   name: string;
@@ -148,9 +149,7 @@ export default function TeamCard({ data, onRequest }: TeamCardProps) {
         {/* Role Tag Column */}
         <div className="flex flex-col gap-2 min-w-0">
           <div className="flex items-center gap-1.5">
-            <svg className="w-4 h-4 text-[#1b3168]" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1v-1h14v1z"/>
-            </svg>
+            <RoleIcon className="w-4 h-4 text-[#1b3168]" />
             <span className="text-[#1b3168] font-bold text-xs">Role Tag</span>
           </div>
           {isExpanded ? (
@@ -169,9 +168,7 @@ export default function TeamCard({ data, onRequest }: TeamCardProps) {
         {/* Skill Tag Column */}
         <div className="flex flex-col gap-2 min-w-0">
           <div className="flex items-center gap-1.5">
-            <svg className="w-4 h-4 text-[#1b3168]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-            </svg>
+            <SkillIcon className="w-4 h-4 text-[#1b3168]" />
             <span className="text-[#1b3168] font-bold text-xs">Skill Tag</span>
           </div>
           {isExpanded ? (
