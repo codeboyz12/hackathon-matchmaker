@@ -55,24 +55,13 @@ export default function ActiveTeamsPage() {
   return (
     <div className="w-full space-y-8 pb-12">
       {/* ── Header ── */}
-      <div className="flex items-center gap-4">
-        <Link
-          href="/"
-          className="w-10 h-10 rounded-full border border-gray-200 bg-white flex items-center justify-center text-[#1b3168] hover:bg-gray-50 transition-colors shadow-sm shrink-0"
-          aria-label="Go back"
-        >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-          </svg>
-        </Link>
-        <div>
-          <h1 className="text-2xl font-extrabold text-[#1b3168] tracking-tight">
-            ทีมที่เข้าร่วม
-          </h1>
-          <p className="text-sm text-gray-500 font-medium mt-0.5">
-            {myTeams.length} ทีม
-          </p>
-        </div>
+      <div>
+        <h1 className="text-2xl font-extrabold text-[#1b3168] tracking-tight">
+          ทีมที่เข้าร่วม
+        </h1>
+        <p className="text-sm text-gray-500 font-medium mt-0.5">
+          {myTeams.length} ทีม
+        </p>
       </div>
 
       {/* ── Status Summary Pills ── */}

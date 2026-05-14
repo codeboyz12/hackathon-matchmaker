@@ -133,7 +133,7 @@ export default function SkillBankPage() {
               <svg className="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
             </div>
             
-            <div className="flex flex-row items-center justify-center gap-8">
+            <div className="flex flex-row items-center justify-center gap-6 lg:gap-0">
               {/* Left: Overall Numeric */}
               <div className="flex items-end gap-1">
                 <span className="text-5xl font-black text-black leading-none">{user.skillBank.softSkillScore}</span>

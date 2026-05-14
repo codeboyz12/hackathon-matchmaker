@@ -1,5 +1,13 @@
 import React from "react";
-import type { ActiveTeam } from "./ActiveTeamSection";
+
+interface ActiveTeam {
+  teamName: string;
+  dateRange: string;
+  daysLeft: number;
+  status: string;
+  memberCount: string;
+  hasNotification?: boolean;
+}
 
 export default function ActiveTeamCard({
   teamName,

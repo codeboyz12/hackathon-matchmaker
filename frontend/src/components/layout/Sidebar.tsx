@@ -111,9 +111,9 @@ export default function Sidebar({ isOpen, onClose }: { isOpen?: boolean; onClose
                 return (
                   <Link
                     key={team.id}
-                    href="/active-team"
+                    href={`/teams/${team.id}`}
                     onClick={onClose}
-                    className="flex flex-col items-center w-14 shrink-0 group"
+                    className="flex flex-col items-center w-14 shrink-0 group cursor-pointer"
                   >
                     <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-[#1b3168] shrink-0 group-hover:border-[#2c52ed] transition-colors">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -133,7 +133,7 @@ export default function Sidebar({ isOpen, onClose }: { isOpen?: boolean; onClose
               {/* Overflow +n bubble */}
               {remainingCount > 0 && (
                 <Link
-                  href="/active-team"
+                  href="/active-teams"
                   onClick={onClose}
                   className="flex flex-col items-center w-14 shrink-0"
                 >
