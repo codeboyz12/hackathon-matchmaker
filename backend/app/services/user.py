@@ -32,14 +32,18 @@ async def delete_account(
 async def list_users(
     db: AsyncIOMotorDatabase,
     *,
-    role: str | None = None,
+    roles: list[str] | None = None,
     skill: str | None = None,
     q: str | None = None,
+    exclude_id: str | None = None,
     page: int = 1,
     limit: int = 20,
 ) -> dict:
     from app.models.user import PaginatedResponse
-    docs, total = await user_repo.get_all(db, role=role, skill=skill, q=q, page=page, limit=limit)
+    exclude_oid = ObjectId(exclude_id) if exclude_id and ObjectId.is_valid(exclude_id) else None
+    docs, total = await user_repo.get_all(
+        db, roles=roles, skill=skill, q=q, exclude_id=exclude_oid, page=page, limit=limit
+    )
     items = [UserPublicResponse.from_document(d) for d in docs]
     return PaginatedResponse(
         items=[i.model_dump(by_alias=True) for i in items],

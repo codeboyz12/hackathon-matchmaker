@@ -6,7 +6,7 @@ async def get_all(
     db: AsyncIOMotorDatabase,
     *,
     status: str | None = None,
-    role: str | None = None,
+    roles: list[str] | None = None,
     q: str | None = None,
     page: int = 1,
     limit: int = 20,
@@ -22,8 +22,8 @@ async def get_all(
     }
     if status:
         query["status"] = status
-    if role:
-        query["required_roles"] = role
+    if roles:
+        query["required_roles"] = {"$in": roles}
     if q:
         query["$text"] = {"$search": q}
 

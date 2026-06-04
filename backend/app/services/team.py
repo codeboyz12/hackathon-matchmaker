@@ -60,6 +60,35 @@ async def create_team(
     return TeamResponse.from_document(inserted)
 
 
+async def _embed_profiles(
+    db: AsyncIOMotorDatabase,
+    docs: list[dict],
+) -> list[TeamResponse]:
+    """Batch-fetch every leader and member referenced across `docs` in one query
+    and return TeamResponse models with leader & members embedded. Orphaned teams
+    (leader account deleted) come back with leader=None and no member embeds."""
+    needed_ids: set[ObjectId] = set()
+    for d in docs:
+        needed_ids.add(d["leader_id"])
+        needed_ids.update(d.get("member_ids", []))
+    user_docs = await user_repo.get_by_ids(db, list(needed_ids)) if needed_ids else []
+    user_index = {str(u["_id"]): u for u in user_docs}
+
+    items: list[TeamResponse] = []
+    for d in docs:
+        leader_doc = user_index.get(str(d["leader_id"]))
+        ordered_members = [
+            user_index[str(mid)]
+            for mid in d.get("member_ids", [])
+            if str(mid) in user_index
+        ]
+        if leader_doc:
+            items.append(TeamDetailResponse.from_document_with_members(d, leader_doc, ordered_members))
+        else:
+            items.append(TeamResponse.from_document(d))
+    return items
+
+
 async def get_user_teams(
     db: AsyncIOMotorDatabase,
     user_id: str,
@@ -67,21 +96,22 @@ async def get_user_teams(
     if not ObjectId.is_valid(user_id):
         raise HTTPException(status_code=422, detail="Invalid user ID format")
     docs = await team_repo.get_by_member(db, ObjectId(user_id))
-    return [TeamResponse.from_document(d) for d in docs]
+    return await _embed_profiles(db, docs)
 
 
 async def list_teams(
     db: AsyncIOMotorDatabase,
     *,
     status: str | None = None,
-    role: str | None = None,
+    roles: list[str] | None = None,
     q: str | None = None,
     page: int = 1,
     limit: int = 20,
 ) -> dict:
     from app.models.user import PaginatedResponse
-    docs, total = await team_repo.get_all(db, status=status, role=role, q=q, page=page, limit=limit)
-    items = [TeamResponse.from_document(d) for d in docs]
+    docs, total = await team_repo.get_all(db, status=status, roles=roles, q=q, page=page, limit=limit)
+    items = await _embed_profiles(db, docs)
+
     return PaginatedResponse(
         items=[i.model_dump(by_alias=True) for i in items],
         total=total,

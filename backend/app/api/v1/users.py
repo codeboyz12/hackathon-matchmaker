@@ -1,12 +1,12 @@
 from typing import Optional
 
 import redis.asyncio as aioredis
-from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
+from fastapi import APIRouter, Depends, File, HTTPException, Query, UploadFile
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from motor.motor_asyncio import AsyncIOMotorDatabase
 
 from app.core.db import db_dependency, redis_dependency
-from app.core.deps import get_current_user_id
+from app.core.deps import get_current_user_id, get_optional_user_id
 from app.models.team import TeamResponse
 from app.models.user import AddCompetitionRequest, CompetitionExperienceResponse, FavoriteToggleResponse, RankSummaryResponse, RoleName, UpdateProfileRequest, UserPublicResponse
 from app.services import team as team_service
@@ -149,16 +149,21 @@ async def get_my_favorites(
 
 @router.get("", summary="List / search users (paginated)")
 async def list_users(
-    role: Optional[RoleName] = None,
+    role: Optional[list[RoleName]] = Query(default=None),
     skill: Optional[str] = None,
     q: Optional[str] = None,
     page: int = 1,
     limit: int = 20,
     db: AsyncIOMotorDatabase = Depends(db_dependency),
+    current_user_id: Optional[str] = Depends(get_optional_user_id),
 ) -> dict:
-    """Return paginated users. Pass `q` for full-text search across name, username, bio and skills."""
+    """Return paginated users. Pass `q` for full-text search across name,
+    username, bio and skills. Repeat `role` to match any of several roles.
+    The authenticated caller is excluded from their own results."""
     limit = min(limit, 100)
-    return await user_service.list_users(db, role=role, skill=skill, q=q, page=page, limit=limit)
+    return await user_service.list_users(
+        db, roles=role, skill=skill, q=q, exclude_id=current_user_id, page=page, limit=limit
+    )
 
 
 @router.get("/{user_id}/teams", response_model=list[TeamResponse], summary="Get teams a user is a member of")

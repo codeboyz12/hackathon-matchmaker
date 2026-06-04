@@ -1,4 +1,13 @@
-import type { Role } from "@/data/mockData";
+// ─── Core enums ──────────────────────────────────────────────────────────────
+export type Role =
+  | "Developer"
+  | "Business"
+  | "UI/UX Designer"
+  | "Marketing"
+  | "AI / Data"
+  | "Pitching";
+
+export type TeamStatus = "WAITING" | "IN_PROGRESS" | "COMPLETED" | "CANCELLED";
 
 // ─── Skill Bank ────────────────────────────────────────────────────────────────
 export type SkillRank = "Bronze" | "Silver" | "Gold" | "Diamond";
@@ -47,7 +56,7 @@ export interface TeamMember {
 export interface Team {
   id: string;
   title: string;
-  leaderId: string;    // FK → User.id (must exist in mockUsers)
+  leaderId: string;    // FK → User.id
   startDate: string;   // ISO date string "2024-05-10"
   endDate: string;
   daysLeft: number;

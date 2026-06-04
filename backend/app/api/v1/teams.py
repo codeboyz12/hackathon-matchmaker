@@ -1,6 +1,6 @@
 from typing import Optional
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Query
 from motor.motor_asyncio import AsyncIOMotorDatabase
 
 from app.core.db import db_dependency
@@ -30,15 +30,16 @@ async def create_team(
 @router.get("", summary="List / search teams (paginated)")
 async def list_teams(
     status: Optional[str] = None,
-    role: Optional[RoleName] = None,
+    role: Optional[list[RoleName]] = Query(default=None),
     q: Optional[str] = None,
     page: int = 1,
     limit: int = 20,
     db: AsyncIOMotorDatabase = Depends(db_dependency),
 ) -> dict:
-    """Return paginated teams. Pass `q` for full-text search across title, description and skills."""
+    """Return paginated teams. Pass `q` for full-text search across title,
+    description and skills. Repeat `role` to match any of several roles."""
     limit = min(limit, 100)
-    return await team_service.list_teams(db, status=status, role=role, q=q, page=page, limit=limit)
+    return await team_service.list_teams(db, status=status, roles=role, q=q, page=page, limit=limit)
 
 
 @router.get("/{team_id}", response_model=TeamDetailResponse, summary="Get team detail")

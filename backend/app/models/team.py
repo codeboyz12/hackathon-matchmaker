@@ -133,6 +133,10 @@ class TeamResponse(BaseModel):
     created_at: datetime
     join_requests: list[JoinRequest] = []
     invites: list[Invite] = []
+    # Embedded profiles — populated by list/detail endpoints, None on the rare
+    # orphaned team whose leader account was deleted.
+    leader: Optional[UserPublicResponse] = None
+    members: list[UserPublicResponse] = []
 
     @classmethod
     def from_document(cls, doc: dict) -> "TeamResponse":

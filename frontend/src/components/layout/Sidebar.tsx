@@ -15,18 +15,14 @@ export default function Sidebar({ isOpen, onClose }: { isOpen?: boolean; onClose
 
   const [user, setUser] = useState<ApiUser | null>(null);
   const [teams, setTeams] = useState<ApiTeam[]>([]);
-  const [userMap, setUserMap] = useState<Record<string, ApiUser>>({});
 
   useEffect(() => {
     apiFetch<ApiUser>("/api/v1/users/me")
       .then(async (me) => {
         setUser(me);
-        const [apiTeams, apiUsers] = await Promise.all([
-          apiFetch<ApiTeam[]>(`/api/v1/users/${me._id}/teams`),
-          apiFetch<ApiUser[]>("/api/v1/users"),
-        ]);
+        // /teams embeds each team's leader, so no separate /users lookup is needed.
+        const apiTeams = await apiFetch<ApiTeam[]>(`/api/v1/users/${me._id}/teams`);
         setTeams(apiTeams.slice(0, 3));
-        setUserMap(Object.fromEntries(apiUsers.map((u) => [u._id, u])));
       })
       .catch(() => {});
   }, []);
@@ -131,7 +127,7 @@ export default function Sidebar({ isOpen, onClose }: { isOpen?: boolean; onClose
           {visibleTeams.length > 0 ? (
             <div className="flex flex-row gap-4 items-start">
               {visibleTeams.map((team) => {
-                const leader = userMap[team.leader_id];
+                const leader = team.leader;
                 return (
                   <Link
                     key={team._id}

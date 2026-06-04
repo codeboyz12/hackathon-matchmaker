@@ -16,11 +16,11 @@ function fmt(dateStr: string): string {
 
 function buildTeamViewModel(
   team: ApiTeam,
-  userMap: Record<string, ApiUser>,
   meId: string | null,
 ): TeamCardViewModel {
-  const leader = userMap[team.leader_id];
-  const members = team.member_ids.map((id) => userMap[id]).filter(Boolean) as ApiUser[];
+  // Profiles come embedded on the team response — no separate /users lookup.
+  const leader = team.leader ?? undefined;
+  const members = team.members ?? [];
 
   let joinStatus: TeamCardViewModel["joinStatus"] = "open";
   let myRequestId: string | undefined;
@@ -128,7 +128,8 @@ export function useTeamsData(params: {
     async function load() {
       setIsLoading(true);
       try {
-        const roleParam = roles.length === 1 ? `&role=${encodeURIComponent(roles[0])}` : "";
+        // Repeat ?role= for every selected role — the backend matches any of them.
+        const roleParam = roles.map((r) => `&role=${encodeURIComponent(r)}`).join("");
         const qParam = debouncedQ ? `&q=${encodeURIComponent(debouncedQ)}` : "";
         const pageParam = `&page=${page}&limit=${LIMIT}`;
 
@@ -144,27 +145,14 @@ export function useTeamsData(params: {
         const favoriteIds = new Set(apiFavorites.map((u) => u._id));
         const meId = me?._id ?? null;
 
-        // Build a userMap from the users page — leaders not in this page will show "Unknown"
-        const userMap = Object.fromEntries(
-          (usersResult.items as ApiUser[]).map((u: ApiUser) => [u._id, u])
-        );
-
-        // Apply multi-role client-side filter only when more than 1 role selected
-        const rawTeams = (teamsResult.items as ApiTeam[]).filter((t: ApiTeam) =>
-          roles.length <= 1 || roles.some((r) => t.required_roles.includes(r))
-        );
-        const rawPeople = (usersResult.items as ApiUser[]).filter((u: ApiUser) =>
-          u._id !== meId &&
-          (roles.length <= 1 || roles.some((r) => u.role.some((ur) => ur.name === r)))
-        );
-
-        setTeams(rawTeams.map((t: ApiTeam) => buildTeamViewModel(t, userMap, meId)));
-        setPeople(rawPeople.map((u: ApiUser) => buildPeopleViewModel(u, favoriteIds)));
+        // Filtering, pagination and self-exclusion are all done server-side now,
+        // so totals/has_next from the API match the rendered lists exactly.
+        setTeams((teamsResult.items as ApiTeam[]).map((t) => buildTeamViewModel(t, meId)));
+        setPeople((usersResult.items as ApiUser[]).map((u) => buildPeopleViewModel(u, favoriteIds)));
         setHasNextTeams(teamsResult.has_next);
         setHasNextPeople(usersResult.has_next);
         setTotalTeams(teamsResult.total);
-        // Exclude self from the count so it matches the filtered list
-        setTotalPeople(meId ? Math.max(0, usersResult.total - 1) : usersResult.total);
+        setTotalPeople(usersResult.total);
       } catch {
         // silent — keep previous results visible
       } finally {

@@ -13,19 +13,22 @@ async def delete_user(db: AsyncIOMotorDatabase, user_id: ObjectId) -> None:
 async def get_all(
     db: AsyncIOMotorDatabase,
     *,
-    role: str | None = None,
+    roles: list[str] | None = None,
     skill: str | None = None,
     q: str | None = None,
+    exclude_id: ObjectId | None = None,
     page: int = 1,
     limit: int = 20,
 ) -> tuple[list[dict], int]:
     query: dict = {}
     if q:
         query["$text"] = {"$search": q}
-    if role:
-        query["role.name"] = role
+    if roles:
+        query["role.name"] = {"$in": roles}
     if skill:
         query["skills.name"] = skill
+    if exclude_id is not None:
+        query["_id"] = {"$ne": exclude_id}
 
     total = await db["users"].count_documents(query)
     skip = (page - 1) * limit

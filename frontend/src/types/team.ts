@@ -1,5 +1,7 @@
 /** Types for team and people listings */
 
+import type { ApiUser } from "@/types/profile";
+
 export type JoinRequestStatus = "pending" | "approved" | "rejected";
 export type JoinStatus = "leader" | "member" | "pending" | "rejected" | "open";
 
@@ -38,6 +40,11 @@ export interface ApiTeam {
   description?: string;
   join_requests: ApiJoinRequest[];
   invites: ApiInvite[];
+  /** Embedded leader profile — present on list & detail responses (null if the
+   *  leader account was deleted). */
+  leader?: ApiUser | null;
+  /** Embedded member profiles in member_ids order. */
+  members?: ApiUser[];
 }
 
 export interface TeamCardData {
