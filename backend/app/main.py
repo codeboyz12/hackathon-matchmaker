@@ -1,3 +1,4 @@
+import os
 from contextlib import asynccontextmanager
 from pathlib import Path
 
@@ -55,7 +56,7 @@ def create_app() -> FastAPI:
     application.include_router(notif_router, prefix="/api/v1")
     application.include_router(reviews_router, prefix="/api/v1")
 
-    uploads_dir = Path("/app/uploads")
+    uploads_dir = Path(os.environ.get("UPLOADS_DIR", str(Path(__file__).parent.parent / "uploads")))
     uploads_dir.mkdir(parents=True, exist_ok=True)
     application.mount("/uploads", StaticFiles(directory=str(uploads_dir)), name="uploads")
 
